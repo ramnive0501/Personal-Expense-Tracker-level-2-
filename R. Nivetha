@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<!--
+=====================================================================
+PROJECT : Personal Expense Tracker
+AUTHOR : R. Nivetha
+REG. NO. : 25132231802522058
+COLLEGE : Dr. M.G.R. Government Arts and Science College for Women, Villupuram
+DEPARTMENT: B.Sc. Computer Science (II Year)
+NOTE : This project was designed and written by R. Nivetha.
+Project ID: PET-RN-2026-NIVETHA-058
+=====================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="R. Nivetha">
+<meta name="project-id" content="PET-RN-2026-NIVETHA-058">
+<title>Personal Expense Tracker | R. Nivetha</title>
+<style>
+/* =====================================================================
+Personal Expense Tracker - Stylesheet
+Author : R. Nivetha | Reg. No. 25132231802522058
+Department : B.Sc. Computer Science, II Year
+College : Dr. M.G.R. Government Arts and Science College for Women, Villupuram
+Project ID : PET-RN-2026-NIVETHA-058
+===================================================================== */
+:root {
+--ink: #1f2540;
+--muted: #6b7190;
+--bg: #f3f4fb;
+--panel: #ffffff;
+--brand: #5b3df5;
+--brand-dark: #3a22b8;
+--income: #12a36b;
+--expense: #e5484d;
+--line: #e4e6f2;
+--radius: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+background: var(--bg);
+color: var(--ink);
+line-height: 1.5;
+}
+.topbar {
+display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+padding: 18px 32px;
+background: linear-gradient(120deg, #3a22b8, #5b3df5 55%, #8a5cf6);
+color: #fff;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.logo {
+width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,.18);
+display: grid; place-items: center; font-size: 26px; font-weight: 700;
+}
+.brand h1 { font-size: 24px; letter-spacing: .3px; }
+.brand p { font-size: 12.5px; opacity: .85; }
+.owner { font-size: 13px; background: rgba(255,255,255,.16); padding: 6px 14px; border-radius: 20px; }
+.container { max-width: 1120px; margin: 22px auto; padding: 0 18px; display: grid; gap: 18px; }
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.card {
+background: var(--panel); border-radius: var(--radius); padding: 16px 18px;
+border-left: 6px solid var(--brand); box-shadow: 0 4px 14px rgba(40,40,100,.07);
+}
+.card span { display: block; font-size: 12.5px; color: var(--muted); }
+.card strong { font-size: 24px; }
+.card.income { border-color: var(--income); } .card.income strong { color: var(--income); }
+.card.expense { border-color: var(--expense); } .card.expense strong { color: var(--expense); }
+.card.balance { border-color: var(--brand); } .card.balance strong.neg { color: var(--expense); }
+.card.count { border-color: #f5a524; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.panel {
+background: var(--panel); border-radius: var(--radius); padding: 20px;
+box-shadow: 0 4px 14px rgba(40,40,100,.07);
+}
+.panel h2 { font-size: 17px; color: var(--brand-dark); margin-bottom: 12px; }
+.panel h2 small { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 6px; }
+label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
+input, select {
+width: 100%; margin-top: 4px; padding: 9px 11px; font: inherit; font-size: 14px; color: var(--ink);
+border: 1.5px solid var(--line); border-radius: 9px; background: #fff;
+}
+input:focus, select:focus { outline: none; border-color: var(--brand); }
+.btnrow, .inline { display: flex; gap: 10px; }
+.inline input { margin-top: 0; }
+.btn {
+border: none; cursor: pointer; font: inherit; font-weight: 600; font-size: 13.5px;
+padding: 9px 18px; border-radius: 9px; white-space: nowrap;
+}
+.btn.primary { background: var(--brand); color: #fff; }
+.btn.primary:hover { background: var(--brand-dark); }
+.btn.ghost { background: #eceefb; color: var(--brand-dark); }
+.btn.small { padding: 4px 10px; font-size: 12px; }
+.btn.edit { background: #e8f0ff; color: #1d4ed8; }
+.btn.del { background: #ffe9ea; color: #c4262c; }
+.error { color: var(--expense); font-size: 12.5px; min-height: 18px; margin: 4px 0; }
+.hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.chips li {
+display: flex; align-items: center; gap: 6px; background: #eef0ff; color: var(--brand-dark);
+padding: 5px 6px 5px 12px; border-radius: 20px; font-size: 13px;
+}
+.chips button {
+border: none; background: #fff; color: var(--expense); width: 20px; height: 20px;
+border-radius: 50%; cursor: pointer; font-weight: 700; line-height: 1;
+}
+.filters { display: grid; grid-template-columns: repeat(5, 1fr) auto; gap: 12px; align-items: end; }
+.filters label { margin-bottom: 0; }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th { background: #f0f1fb; color: var(--brand-dark); text-align: left; padding: 9px 10px; font-size: 12.5px; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--line); }
+.r { text-align: right; }
+.tag { padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.tag.Income { background: #dcf7ea; color: #0b7a4f; }
+.tag.Expense { background: #ffe5e6; color: #b3262b; }
+.amt.Income { color: var(--income); font-weight: 600; }
+.amt.Expense { color: var(--expense); font-weight: 600; }
+.empty { text-align: center; color: var(--muted); padding: 14px; font-size: 13.5px; }
+.charthead { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+.charthead h2 { margin: 0; }
+.charthead select { width: auto; margin: 0; }
+canvas { width: 100%; height: auto; display: block; }
+.footer { text-align: center; padding: 18px; font-size: 12.5px; color: var(--muted); }
+@media (max-width: 900px) {
+.cards { grid-template-columns: repeat(2, 1fr); }
+.grid { grid-template-columns: 1fr; }
+.filters { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+<div class="brand">
+<span class="logo">&#8377;</span>
+<div>
+<h1>Personal Expense Tracker</h1>
+<p>Track income, control spending, understand your money</p>
+</div>
+</div>
+<div class="owner">Developed by <strong>R. Nivetha</strong></div>
+</header>
+
+<main class="container">
+<!-- Summary cards: total income, total expense, balance -->
+<section class="cards" aria-label="Financial summary">
+<div class="card income"><span>Total Income</span><strong id="totalIncome">0.00</strong></div>
+<div class="card expense"><span>Total Expenses</span><strong id="totalExpense">0.00</strong></div>
+<div class="card balance"><span>Current Balance</span><strong id="balance">0.00</strong></div>
+<div class="card count"><span>Transactions</span><strong id="txCount">0</strong></div>
+</section>
+
+<div class="grid">
+<!-- Add / Edit form -->
+<section class="panel">
+<h2 id="formTitle">Add Transaction</h2>
+<form id="txForm" novalidate>
+<input type="hidden" id="editId">
+<label>Type
+<select id="type">
+<option value="Expense">Expense</option>
+<option value="Income">Income</option>
+</select>
+</label>
+<label>Amount (&#8377;)
+<input type="number" id="amount" min="0.01" step="0.01" placeholder="e.g. 450.00">
+</label>
+<label>Date
+<input type="date" id="date">
+</label>
+<label>Category
+<select id="category"></select>
+</label>
+<label>Description
+<input type="text" id="description" maxlength="60" placeholder="e.g. Grocery shopping">
+</label>
+<p class="error" id="formError" role="alert"></p>
+<div class="btnrow">
+<button type="submit" class="btn primary" id="saveBtn">Add Transaction</button>
+<button type="button" class="btn ghost" id="cancelBtn" hidden>Cancel Edit</button>
+</div>
+</form>
+</section>
+
+<!-- Category manager -->
+<section class="panel">
+<h2>Manage Categories</h2>
+<div class="inline">
+<input type="text" id="newCategory" maxlength="20" placeholder="New category name">
+<button class="btn primary" id="addCatBtn" type="button">Add</button>
+</div>
+<p class="error" id="catError" role="alert"></p>
+<ul id="catList" class="chips"></ul>
+<p class="hint">A category used by a transaction cannot be deleted.</p>
+</section>
+</div>
+
+<!-- Search and filter -->
+<section class="panel">
+<h2>Search &amp; Filter</h2>
+<div class="filters">
+<label>Search description
+<input type="text" id="fSearch" placeholder="Type to search...">
+</label>
+<label>Category
+<select id="fCategory"></select>
+</label>
+<label>Type
+<select id="fType">
+<option value="All">All</option>
+<option value="Income">Income</option>
+<option value="Expense">Expense</option>
+</select>
+</label>
+<label>From date
+<input type="date" id="fFrom">
+</label>
+<label>To date
+<input type="date" id="fTo">
+</label>
+<button class="btn ghost" id="clearBtn" type="button">Clear Filters</button>
+</div>
+</section>
+
+<!-- Transactions table -->
+<section class="panel">
+<h2>Transactions <small id="shownInfo"></small></h2>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>Date</th><th>Description</th><th>Category</th><th>Type</th>
+<th class="r">Amount (&#8377;)</th><th>Actions</th>
+</tr>
+</thead>
+<tbody id="txBody"></tbody>
+</table>
+</div>
+<p class="empty" id="emptyMsg" hidden>No transactions found.</p>
+</section>
+
+<!-- Monthly summary and charts -->
+<div class="grid">
+<section class="panel">
+<h2>Monthly Summary</h2>
+<div class="tablewrap">
+<table>
+<thead>
+<tr><th>Month</th><th class="r">Income</th><th class="r">Expenses</th><th class="r">Savings</th></tr>
+</thead>
+<tbody id="monthBody"></tbody>
+</table>
+</div>
+<p class="empty" id="monthEmpty" hidden>No data for monthly summary.</p>
+</section>
+
+<section class="panel">
+<div class="charthead">
+<h2>Expense Chart</h2>
+<select id="chartMode">
+<option value="category">By Category</option>
+<option value="month">By Month</option>
+</select>
+</div>
+<canvas id="chart" width="520" height="320"></canvas>
+<p class="empty" id="chartEmpty" hidden>No expense data to display.</p>
+</section>
+</div>
+</main>
+
+<footer class="footer">
+<span id="authorLine"></span>
+</footer>
+
+<script>
+/* =====================================================================
+Personal Expense Tracker - JavaScript
+Author : R. Nivetha | Reg. No. 25132231802522058
+Department : B.Sc. Computer Science, II Year
+College : Dr. M.G.R. Government Arts and Science College for Women, Villupuram
+Project ID : PET-RN-2026-NIVETHA-058
+Original work of R. Nivetha. Author comments must be retained.
+===================================================================== */
+"use strict";
+
+/* ---------- 1. Author identification (project ownership) ---------- */
+const AUTHOR = {
+name: "R. Nivetha",
+regNo: "25132231802522058",
+projectId: "PET-RN-2026-NIVETHA-058",
+title: "Personal Expense Tracker"
+};
+
+/* ---------- 2. Storage keys and default data ---------- */
+const TX_KEY = "pet_nivetha_transactions";
+const CAT_KEY = "pet_nivetha_categories";
+const DEFAULT_CATEGORIES = ["Food", "Travel", "Shopping", "Bills", "Education", "Health", "Salary", "Other"];
+const COLORS = ["#5b3df5", "#12a36b", "#f5a524", "#e5484d", "#0ea5e9",
+"#d946ef", "#14b8a6", "#8b5cf6", "#f97316", "#64748b"];
+
+let transactions = load(TX_KEY, []);
+let categories = load(CAT_KEY, DEFAULT_CATEGORIES.slice());
+
+/* ---------- 3. Local Storage helpers ---------- */
+function load(key, fallback) {
+try {
+const raw = localStorage.getItem(key);
+return raw ? JSON.parse(raw) : fallback;
+} catch (e) {
+return fallback;
+}
+}
+function save() {
+localStorage.setItem(TX_KEY, JSON.stringify(transactions));
+localStorage.setItem(CAT_KEY, JSON.stringify(categories));
+}
+
+/* ---------- 4. Short helpers ---------- */
+const $ = (id) => document.getElementById(id);
+const money = (n) => Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const today = () => new Date().toISOString().slice(0, 10);
+const monthName = (ym) => {
+const [y, m] = ym.split("-");
+return new Date(Number(y), Number(m) - 1, 1).toLocaleString("en-US", { month: "short", year: "numeric" });
+};
+function el(tag, text, cls) {
+const e = document.createElement(tag);
+if (text !== undefined) e.textContent = text;
+if (cls) e.className = cls;
+return e;
+}
+
+/* ---------- 5. Category management ---------- */
+function fillCategorySelects() {
+const formSel = $("category");
+const filterSel = $("fCategory");
+const keepForm = formSel.value;
+const keepFilter = filterSel.value || "All";
+formSel.innerHTML = "";
+filterSel.innerHTML = "";
+filterSel.appendChild(new Option("All", "All"));
+categories.forEach((c) => {
+formSel.appendChild(new Option(c, c));
+filterSel.appendChild(new Option(c, c));
+});
+if (categories.includes(keepForm)) formSel.value = keepForm;
+filterSel.value = categories.includes(keepFilter) || keepFilter === "All" ? keepFilter : "All";
+}
+
+function renderCategoryList() {
+const ul = $("catList");
+ul.innerHTML = "";
+categories.forEach((c) => {
+const li = el("li", c);
+const b = el("button", "\u00d7");
+b.title = "Delete category";
+b.type = "button";
+b.addEventListener("click", () => deleteCategory(c));
+li.appendChild(b);
+ul.appendChild(li);
+});
+}
+
+function addCategory() {
+const name = $("newCategory").value.trim();
+const err = $("catError");
+err.textContent = "";
+if (!name) { err.textContent = "Please enter a category name."; return; }
+if (categories.some((c) => c.toLowerCase() === name.toLowerCase())) {
+err.textContent = "This category already exists."; return;
+}
+categories.push(name);
+$("newCategory").value = "";
+save();
+refreshAll();
+}
+
+function deleteCategory(name) {
+const err = $("catError");
+err.textContent = "";
+if (transactions.some((t) => t.category === name)) {
+err.textContent = "Cannot delete '" + name + "': it is used by transactions."; return;
+}
+if (categories.length <= 1) { err.textContent = "At least one category is required."; return; }
+categories = categories.filter((c) => c !== name);
+save();
+refreshAll();
+}
+
+/* ---------- 6. Add / edit / delete transactions ---------- */
+function resetForm() {
+$("txForm").reset();
+$("editId").value = "";
+$("date").value = today();
+$("formTitle").textContent = "Add Transaction";
+$("saveBtn").textContent = "Add Transaction";
+$("cancelBtn").hidden = true;
+$("formError").textContent = "";
+}
+
+function submitForm(ev) {
+ev.preventDefault();
+const amount = parseFloat($("amount").value);
+const date = $("date").value;
+const description = $("description").value.trim();
+const category = $("category").value;
+const type = $("type").value;
+const err = $("formError");
+
+if (!(amount > 0)) { err.textContent = "Enter an amount greater than zero."; return; }
+if (!date) { err.textContent = "Please select a date."; return; }
+if (!category) { err.textContent = "Please select a category."; return; }
+if (!description) { err.textContent = "Please enter a description."; return; }
+
+const id = $("editId").value;
+const record = { amount: Math.round(amount * 100) / 100, date, description, category, type };
+if (id) {
+const i = transactions.findIndex((t) => t.id === id);
+if (i !== -1) transactions[i] = Object.assign({ id }, record);
+} else {
+transactions.push(Object.assign({ id: "t" + Date.now() + Math.floor(Math.random() * 1000) }, record));
+}
+save();
+resetForm();
+refreshAll();
+}
+
+function startEdit(id) {
+const t = transactions.find((x) => x.id === id);
+if (!t) return;
+$("editId").value = t.id;
+$("type").value = t.type;
+$("amount").value = t.amount;
+$("date").value = t.date;
+$("category").value = t.category;
+$("description").value = t.description;
+$("formTitle").textContent = "Edit Transaction";
+$("saveBtn").textContent = "Update Transaction";
+$("cancelBtn").hidden = false;
+$("formError").textContent = "";
+window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function deleteTx(id) {
+if (!window.confirm("Delete this transaction?")) return;
+transactions = transactions.filter((t) => t.id !== id);
+save();
+if ($("editId").value === id) resetForm();
+refreshAll();
+}
+
+/* ---------- 7. Search and filter ---------- */
+function filteredTransactions() {
+const q = $("fSearch").value.trim().toLowerCase();
+const cat = $("fCategory").value;
+const type = $("fType").value;
+const from = $("fFrom").value;
+const to = $("fTo").value;
+return transactions
+.filter((t) => (!q || t.description.toLowerCase().includes(q)) &&
+(cat === "All" || t.category === cat) &&
+(type === "All" || t.type === type) &&
+(!from || t.date >= from) &&
+(!to || t.date <= to))
+.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+}
+
+function clearFilters() {
+$("fSearch").value = "";
+$("fCategory").value = "All";
+$("fType").value = "All";
+$("fFrom").value = "";
+$("fTo").value = "";
+refreshAll();
+}
+
+/* ---------- 8. Rendering: table, totals, monthly summary ---------- */
+function renderTable() {
+const rows = filteredTransactions();
+const body = $("txBody");
+body.innerHTML = "";
+rows.forEach((t) => {
+const tr = document.createElement("tr");
+tr.appendChild(el("td", t.date));
+tr.appendChild(el("td", t.description));
+tr.appendChild(el("td", t.category));
+const tdType = document.createElement("td");
+tdType.appendChild(el("span", t.type, "tag " + t.type));
+tr.appendChild(tdType);
+const tdAmt = el("td", (t.type === "Income" ? "+ " : "- ") + money(t.amount), "r amt " + t.type);
+tr.appendChild(tdAmt);
+const tdAct = document.createElement("td");
+const e = el("button", "Edit", "btn small edit");
+const d = el("button", "Delete", "btn small del");
+e.type = d.type = "button";
+e.addEventListener("click", () => startEdit(t.id));
+d.addEventListener("click", () => deleteTx(t.id));
+tdAct.appendChild(e);
+tdAct.appendChild(document.createTextNode(" "));
+tdAct.appendChild(d);
+tr.appendChild(tdAct);
+body.appendChild(tr);
+});
+$("emptyMsg").hidden = rows.length > 0;
+$("shownInfo").textContent = "(showing " + rows.length + " of " + transactions.length + ")";
+}
+
+function renderTotals() {
+let inc = 0, exp = 0;
+transactions.forEach((t) => { if (t.type === "Income") inc += t.amount; else exp += t.amount; });
+const bal = inc - exp;
+$("totalIncome").textContent = "\u20b9 " + money(inc);
+$("totalExpense").textContent = "\u20b9 " + money(exp);
+const b = $("balance");
+b.textContent = (bal < 0 ? "- " : "") + "\u20b9 " + money(Math.abs(bal));
+b.classList.toggle("neg", bal < 0);
+$("txCount").textContent = transactions.length;
+}
+
+function monthlyData() {
+const map = {};
+transactions.forEach((t) => {
+const ym = t.date.slice(0, 7);
+if (!map[ym]) map[ym] = { income: 0, expense: 0 };
+if (t.type === "Income") map[ym].income += t.amount; else map[ym].expense += t.amount;
+});
+return Object.keys(map).sort().map((k) => ({ ym: k, income: map[k].income, expense: map[k].expense }));
+}
+
+function renderMonthly() {
+const data = monthlyData();
+const body = $("monthBody");
+body.innerHTML = "";
+data.forEach((m) => {
+const tr = document.createElement("tr");
+const sav = m.income - m.expense;
+tr.appendChild(el("td", monthName(m.ym)));
+tr.appendChild(el("td", money(m.income), "r amt Income"));
+tr.appendChild(el("td", money(m.expense), "r amt Expense"));
+const savText = (sav < 0 ? "- " : "") + money(Math.abs(sav));
+tr.appendChild(el("td", savText, "r amt " + (sav < 0 ? "Expense" : "Income")));
+body.appendChild(tr);
+});
+$("monthEmpty").hidden = data.length > 0;
+}
+
+/* ---------- 9. Chart drawn on HTML5 Canvas ---------- */
+function chartData() {
+if ($("chartMode").value === "month") {
+return monthlyData().filter((m) => m.expense > 0).map((m) => ({ label: monthName(m.ym), value: m.expense }));
+}
+const map = {};
+transactions.filter((t) => t.type === "Expense").forEach((t) => {
+map[t.category] = (map[t.category] || 0) + t.amount;
+});
+return Object.keys(map).map((k) => ({ label: k, value: map[k] })).sort((a, b) => b.value - a.value);
+}
+
+function renderChart() {
+const canvas = $("chart");
+const ctx = canvas.getContext("2d");
+const data = chartData();
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+$("chartEmpty").hidden = data.length > 0;
+canvas.style.display = data.length ? "block" : "none";
+if (!data.length) return;
+
+const W = canvas.width, H = canvas.height;
+const left = 62, right = 14, top = 18, bottom = 52;
+const plotW = W - left - right, plotH = H - top - bottom;
+const max = Math.max.apply(null, data.map((d) => d.value));
+const step = niceStep(max / 4);
+const yMax = Math.ceil(max / step) * step;
+
+ctx.font = "12px Poppins, Arial, sans-serif";
+ctx.textBaseline = "middle";
+ctx.strokeStyle = "#e4e6f2";
+ctx.fillStyle = "#6b7190";
+ctx.lineWidth = 1;
+for (let v = 0; v <= yMax + 0.001; v += step) {
+const y = top + plotH - (v / yMax) * plotH;
+ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(W - right, y); ctx.stroke();
+ctx.textAlign = "right";
+ctx.fillText(shortNum(v), left - 8, y);
+}
+const slot = plotW / data.length;
+const barW = Math.min(54, slot * 0.6);
+data.forEach((d, i) => {
+const h = (d.value / yMax) * plotH;
+const x = left + slot * i + (slot - barW) / 2;
+const y = top + plotH - h;
+ctx.fillStyle = COLORS[i % COLORS.length];
+ctx.fillRect(x, y, barW, h);
+ctx.fillStyle = "#1f2540";
+ctx.textAlign = "center";
+ctx.fillText(shortNum(d.value), x + barW / 2, y - 9);
+ctx.fillStyle = "#6b7190";
+ctx.fillText(d.label.length > 9 ? d.label.slice(0, 8) + "." : d.label, x + barW / 2, top + plotH + 18);
+});
+ctx.fillStyle = "#6b7190";
+ctx.textAlign = "center";
+const axisTitle = $("chartMode").value === "month" ? "Expenses per month" : "Expenses per category";
+ctx.fillText(axisTitle + " (\u20b9)", left + plotW / 2, H - 10);
+}
+function niceStep(raw) {
+if (raw <= 0) return 1;
+const p = Math.pow(10, Math.floor(Math.log10(raw)));
+const f = raw / p;
+return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+}
+function shortNum(n) {
+if (n >= 100000) return (n / 100000).toFixed(1).replace(".0", "") + "L";
+if (n >= 1000) return (n / 1000).toFixed(1).replace(".0", "") + "k";
+return String(Math.round(n));
+}
+
+/* ---------- 10. Refresh everything automatically ---------- */
+function refreshAll() {
+fillCategorySelects();
+renderCategoryList();
+renderTable();
+renderTotals();
+renderMonthly();
+renderChart();
+}
+
+/* ---------- 11. Start-up ---------- */
+function init() {
+$("authorLine").textContent = AUTHOR.title + " | Designed and developed by " + AUTHOR.name +
+" | Reg. No. " + AUTHOR.regNo + " | Project ID " + AUTHOR.projectId;
+$("txForm").addEventListener("submit", submitForm);
+$("cancelBtn").addEventListener("click", resetForm);
+$("addCatBtn").addEventListener("click", addCategory);
+$("newCategory").addEventListener("keydown", (e) => {
+if (e.key === "Enter") { e.preventDefault(); addCategory(); }
+});
+["fSearch", "fCategory", "fType", "fFrom", "fTo"].forEach((id) => {
+$(id).addEventListener("input", renderTable);
+$(id).addEventListener("change", renderTable);
+});
+$("clearBtn").addEventListener("click", clearFilters);
+$("chartMode").addEventListener("change", renderChart);
+resetForm();
+refreshAll();
+console.log("%c" + AUTHOR.title + " by " + AUTHOR.name + " (" + AUTHOR.projectId + ")",
+"color:#5b3df5;font-weight:bold");
+}
+init();
+
+</script>
+</body>
+</html>
